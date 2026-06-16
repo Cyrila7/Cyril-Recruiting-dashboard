@@ -3,13 +3,13 @@
 A full-stack dashboard built for Cyril's internship recruiting season.
 
 ## Features
-- 🎯 **Career Tracker** — 100 companies pre-loaded, track Applied/OA/Interview/Result, add new companies, opening date countdown
-- 💻 **NeetCode 150** — Track all 150 problems, mark mastered/in progress, add pattern notes
-- 📝 **Notes** — Capture DSA patterns, ideas, follow-ups by tag
-- 🔗 **Links** — Save important career/DSA/project links
-- 🌡️ **Mood Tracker** — Daily check-ins
-- 🔔 **Reminders** — Send yourself email reminders, schedule future ones
-- 📧 **Auto Emails** — Daily NeetCode reminder (9am) + Weekly digest (Monday 8am)
+-  **Career Tracker** — 100 companies pre-loaded, track Applied/OA/Interview/Result, add new companies, opening date countdown
+- **NeetCode 150** — Track all 150 problems, mark mastered/in progress, add pattern notes
+-  **Notes** — Capture DSA patterns, ideas, follow-ups by tag
+-  **Links** — Save important career/DSA/project links
+-  **Mood Tracker** — Daily check-ins
+-  **Reminders** — Send yourself email reminders, schedule future ones
+-  **Auto Emails** — Daily NeetCode reminder (9am) + Weekly digest (Monday 8am)
 
 ---
 
@@ -69,7 +69,7 @@ VITE_BACKEND_URL=https://your-backend-url.com
 ```
 
 ## Deploy Backend (Railway)
-Same pattern as PathPilot — push to GitHub, connect Railway, set env vars for mail config.
+Same pattern  — push to GitHub, connect Railway, set env vars for mail config.
 
 ---
 
