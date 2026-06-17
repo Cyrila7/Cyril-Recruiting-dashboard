@@ -57,26 +57,36 @@ public class ReminderController {
     @PostMapping("/schedule")
     public ResponseEntity<?> schedule(@RequestBody Map<String, String> req) {
         try {
-            LocalDateTime target = LocalDateTime.parse(
+            // Frontend sends local datetime (e.g. America/New_York). Parse as that zone explicitly.
+            java.time.ZoneId userZone = java.time.ZoneId.of("America/New_York");
+            LocalDateTime targetLocal = LocalDateTime.parse(
                 req.get("scheduledTime").substring(0, 16),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
             );
-            long delaySeconds = java.time.Duration.between(LocalDateTime.now(), target).getSeconds();
-            if (delaySeconds <= 0) return ResponseEntity.badRequest().body(Map.of("error", "Time must be in the future"));
+            java.time.ZonedDateTime targetZoned = targetLocal.atZone(userZone);
+            java.time.ZonedDateTime nowZoned = java.time.ZonedDateTime.now(userZone);
+
+            long delaySeconds = java.time.Duration.between(nowZoned, targetZoned).getSeconds();
+            if (delaySeconds <= 0) return ResponseEntity.badRequest().body(Map.of("error", "Time must be in the future", "delaySeconds", delaySeconds));
 
             scheduler.schedule(() -> {
                 try {
-                    emailService.sendEmail(
+                    String html = EmailService.baseTemplate(
+                        "<div style='font-size:15px;line-height:1.7;color:#e8e8f0;white-space:pre-wrap;'>" + req.getOrDefault("message", "") + "</div>",
+                        "CyrilHQ Reminder"
+                    );
+                    emailService.sendHtmlEmail(
                         req.getOrDefault("to", "cyrrilann@gmail.com"),
                         req.getOrDefault("subject", "Scheduled Reminder"),
-                        req.getOrDefault("message", "")
+                        html
                     );
+                    System.out.println("Scheduled email sent successfully at " + java.time.ZonedDateTime.now(userZone));
                 } catch (Exception e) {
                     System.err.println("Scheduled email failed: " + e.getMessage());
                 }
             }, delaySeconds, TimeUnit.SECONDS);
 
-            return ResponseEntity.ok(Map.of("status", "scheduled", "delaySeconds", delaySeconds));
+            return ResponseEntity.ok(Map.of("status", "scheduled", "delaySeconds", delaySeconds, "willSendAt", targetZoned.toString()));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
         }

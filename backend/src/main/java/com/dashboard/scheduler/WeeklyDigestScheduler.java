@@ -11,16 +11,16 @@ public class WeeklyDigestScheduler {
     @Autowired
     private EmailService emailService;
 
-    // Every Monday at 8:00 AM
-    @Scheduled(cron = "0 0 8 * * MON")
+    // Every Monday at 8:00 AM Eastern Time
+    @Scheduled(cron = "0 0 8 * * MON", zone = "America/New_York")
     public void sendWeeklyDigest() {
         String html = EmailService.baseTemplate(weeklyContent(), "Weekly Recruiting Digest 📊");
         emailService.sendHtmlEmail("cyrrilann@gmail.com", "Weekly Recruiting Digest 📊", html);
         System.out.println("Weekly digest sent.");
     }
 
-    // Daily NeetCode reminder at 9:00 AM
-    @Scheduled(cron = "0 0 9 * * *")
+    // Daily NeetCode reminder at 9:00 AM Eastern Time
+    @Scheduled(cron = "0 0 9 * * *", zone = "America/New_York")
     public void sendDailyNeetCode() {
         String html = EmailService.baseTemplate(neetcodeContent(), "Daily DSA Reminder 🧠");
         emailService.sendHtmlEmail("cyrrilann@gmail.com", "🧠 Daily NeetCode Reminder", html);
