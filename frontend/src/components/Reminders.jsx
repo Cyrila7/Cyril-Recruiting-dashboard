@@ -2,6 +2,22 @@ import { useState } from "react";
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
+function getNext7Days() {
+  const days = [];
+  const today = new Date();
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const label = i === 0 ? "Today" : i === 1 ? "Tomorrow" : d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+    const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    days.push({ label, value });
+  }
+  return days;
+}
+
+const HOURS = Array.from({ length: 12 }, (_, i) => i + 1); // 1-12
+const MINUTES = ["00", "15", "30", "45"];
+
 const QUICK_REMINDERS = [
   {
     label: "Daily NeetCode reminder",
@@ -137,7 +153,10 @@ export default function Reminders() {
   const [reminders, setReminders] = useState(() => JSON.parse(localStorage.getItem("reminders") || "[]"));
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
-  const [scheduledTime, setScheduledTime] = useState("");
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduleHour, setScheduleHour] = useState("");
+  const [scheduleMinute, setScheduleMinute] = useState("");
+  const [scheduleAmPm, setScheduleAmPm] = useState("PM");
   const [sending, setSending] = useState(null);
   const [feedback, setFeedback] = useState("");
 
@@ -175,16 +194,26 @@ export default function Reminders() {
       });
       if (res.ok) {
         setFeedback("✅ Custom reminder sent!");
-        setTitle(""); setMessage(""); setScheduledTime("");
+        setTitle(""); setMessage("");
         saveLocal([{ id: Date.now(), title, sentAt: new Date().toLocaleString() }, ...reminders]);
       } else setFeedback("❌ Failed to send.");
     } catch { setFeedback("❌ Could not connect to backend."); }
     setSending(null);
   };
 
+  const buildScheduledTime = () => {
+    if (!scheduleDate || !scheduleHour || !scheduleMinute) return null;
+    let hour24 = parseInt(scheduleHour, 10);
+    if (scheduleAmPm === "PM" && hour24 !== 12) hour24 += 12;
+    if (scheduleAmPm === "AM" && hour24 === 12) hour24 = 0;
+    const hh = String(hour24).padStart(2, "0");
+    return `${scheduleDate}T${hh}:${scheduleMinute}`;
+  };
+
   const scheduleReminder = async () => {
+    const scheduledTime = buildScheduledTime();
     if (!title || !message || !scheduledTime) {
-      setFeedback("❌ Fill in subject, message, and schedule time first.");
+      setFeedback("❌ Fill in subject, message, date, hour, and minute first.");
       return;
     }
     setSending("schedule");
@@ -199,7 +228,7 @@ export default function Reminders() {
       if (res.ok) {
         setFeedback(`✅ Scheduled! Sent value: "${scheduledTime}" | Server will send at: ${data.willSendAt || "?"} | Delay: ${data.delaySeconds}s`);
         saveLocal([{ id: Date.now(), title: `${title} (scheduled)`, sentAt: `Will send at ${data.willSendAt || scheduledTime}` }, ...reminders]);
-        setTitle(""); setMessage(""); setScheduledTime("");
+        setTitle(""); setMessage(""); setScheduleDate(""); setScheduleHour(""); setScheduleMinute(""); setScheduleAmPm("PM");
       } else {
         setFeedback(`❌ Failed to schedule: ${JSON.stringify(data)}`);
       }
@@ -256,11 +285,34 @@ export default function Reminders() {
           </div>
           <div style={{ marginBottom: 16 }}>
             <label style={{ fontSize: 12, color: "var(--muted)", display: "block", marginBottom: 4 }}>Schedule (optional)</label>
-            <input className="input" type="datetime-local" value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} />
+            <div className="flex gap-8">
+              <select className="select" value={scheduleDate} onChange={(e) => setScheduleDate(e.target.value)} style={{ flex: 2 }}>
+                <option value="">Date...</option>
+                {getNext7Days().map((d) => (
+                  <option key={d.value} value={d.value}>{d.label}</option>
+                ))}
+              </select>
+              <select className="select" value={scheduleHour} onChange={(e) => setScheduleHour(e.target.value)} style={{ flex: 1 }}>
+                <option value="">Hr</option>
+                {HOURS.map((h) => (
+                  <option key={h} value={h}>{h}</option>
+                ))}
+              </select>
+              <select className="select" value={scheduleMinute} onChange={(e) => setScheduleMinute(e.target.value)} style={{ flex: 1 }}>
+                <option value="">Min</option>
+                {MINUTES.map((m) => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+              <select className="select" value={scheduleAmPm} onChange={(e) => setScheduleAmPm(e.target.value)} style={{ flex: 1 }}>
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
           </div>
           <div className="flex gap-8">
             <button className="btn btn-primary" disabled={sending !== null} onClick={sendCustom}>Send Now</button>
-            <button className="btn btn-ghost" disabled={sending !== null || !scheduledTime} onClick={scheduleReminder}>Schedule</button>
+            <button className="btn btn-ghost" disabled={sending !== null || !scheduleDate || !scheduleHour || !scheduleMinute} onClick={scheduleReminder}>Schedule</button>
           </div>
         </div>
       </div>
