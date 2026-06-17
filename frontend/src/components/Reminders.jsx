@@ -191,11 +191,13 @@ export default function Reminders() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ subject: title, message, to: "cyrrilann@gmail.com", scheduledTime }),
       });
+      const data = await res.json();
+      alert("SENT scheduledTime: " + scheduledTime + "\n\nRESPONSE: " + JSON.stringify(data));
       if (res.ok) {
         setFeedback(`✅ Scheduled for ${new Date(scheduledTime).toLocaleString()}`);
         setTitle(""); setMessage(""); setScheduledTime("");
-      } else setFeedback("❌ Failed to schedule.");
-    } catch { setFeedback("❌ Could not connect to backend."); }
+      } else setFeedback("❌ Failed to schedule: " + JSON.stringify(data));
+    } catch (err) { setFeedback("❌ Could not connect to backend: " + err.message); }
     setSending(null);
   };
 
