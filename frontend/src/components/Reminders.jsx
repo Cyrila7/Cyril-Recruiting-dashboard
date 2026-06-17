@@ -20,7 +20,7 @@ const QUICK_REMINDERS = [
         <div style="margin-bottom:8px;"><a href="https://leetcode.com/problems/3sum/" style="display:block;background:#1a1a24;border:1px solid #2a2a3a;border-radius:8px;padding:10px 16px;text-decoration:none;color:#e8e8f0;font-size:13px;font-weight:600;">3Sum (#15) <span style="color:#6c63ff;">→</span></a></div>
         <div style="margin-bottom:16px;"><a href="https://neetcode.io/roadmap" style="display:block;background:#1a1a24;border:1px solid #2a2a3a;border-radius:8px;padding:10px 16px;text-decoration:none;color:#e8e8f0;font-size:13px;font-weight:600;">NeetCode Roadmap <span style="color:#6c63ff;">→</span></a></div>
         <div style="background:#ff658422;border:1px solid #ff658444;border-radius:8px;padding:14px;text-align:center;">
-          <p style="margin:0;color:#ff9fb4;font-size:13px;">🔥 Two hours today. Keep going.</p>
+          <p style="margin:0;color:#ff9fb4;font-size:13px;">🔥 Two hours today... Keep going.</p>
         </div>
       </div>`
   },
