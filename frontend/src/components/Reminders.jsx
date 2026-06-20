@@ -242,7 +242,7 @@ export default function Reminders() {
     <div>
       <div className="page-header">
         <h2>🔔 Reminders</h2>
-        <p>Rich email reminders sent to cyrrilann@gmail.com · Auto: Daily 9am + Weekly Monday 8am</p>
+        <p>Email reminders sent to cyrrilann@gmail.com · Auto: Daily 9am + Weekly Monday 8am</p>
       </div>
 
       {feedback && (
@@ -253,7 +253,7 @@ export default function Reminders() {
         {/* Quick send */}
         <div className="card">
           <div className="section-label mb-16">⚡ Quick Send</div>
-          <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Sends a rich email with links and context — not just plain text.</p>
+          <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>Sends a email with links and context — not just plain text.</p>
           {QUICK_REMINDERS.map((r) => (
             <div key={r.label} className="flex-between" style={{ marginBottom: 12, padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
               <div>

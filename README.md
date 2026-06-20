@@ -13,7 +13,7 @@ Built for my own Summer 2027 recruiting grind — feel free to fork and make it 
 - 📝 **Notes** — Capture DSA patterns, ideas, follow-ups by tag
 - 🔗 **Links** — Save important career/DSA/project links
 - 🌡️ **Mood Tracker** — Daily check-ins
-- 🔔 **Reminders** — Send yourself rich HTML email reminders, schedule future ones
+- 🔔 **Reminders** — Send yourself HTML email reminders, schedule future ones
 - 📧 **Auto Emails** — Daily NeetCode reminder (9am ET) + Weekly digest (Monday 8am ET)
 
 ## Screenshots
