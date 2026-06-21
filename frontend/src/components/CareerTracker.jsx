@@ -21,6 +21,49 @@ const RESULTS = ["", "offer", "rejected", "withdrawn"];
 
 const BLANK = { tier: "Big Tech", company: "", role: "SWE Intern", opens: "2026-08-01", url: "", priority: 2, notes: "", applied: false, oa: false, interview: false, result: "" };
 
+// wraps a CSV field in quotes and escapes internal quotes, since company notes
+// or names could contain commas which would otherwise break columns
+function csvEscape(value) {
+  const str = String(value ?? "");
+  if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+function exportToCSV(rows) {
+  const headers = ["Company", "Tier", "Role", "Opens", "Applied", "OA", "Interview", "Result", "Priority", "Notes", "URL"];
+  const lines = [headers.join(",")];
+
+  rows.forEach((c) => {
+    lines.push([
+      csvEscape(c.company),
+      csvEscape(c.tier),
+      csvEscape(c.role),
+      csvEscape(c.opens),
+      c.applied ? "Yes" : "No",
+      c.oa ? "Yes" : "No",
+      c.interview ? "Yes" : "No",
+      csvEscape(c.result),
+      c.priority,
+      csvEscape(c.notes),
+      csvEscape(c.url),
+    ].join(","));
+  });
+
+  const csvContent = lines.join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const today = new Date().toISOString().split("T")[0];
+  link.href = url;
+  link.download = `cyrilhq-companies-${today}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 export default function CareerTracker() {
   const [companies, setCompanies] = useState(() => {
     const s = localStorage.getItem("companies");
@@ -90,7 +133,10 @@ export default function CareerTracker() {
           <h2>🎯 Career Tracker</h2>
           <p>{applied} applied · {companies.length} total companies</p>
         </div>
-        <button className="btn btn-primary" onClick={() => { setForm(BLANK); setEditId(null); setShowAdd(true); }}>+ Add Company</button>
+        <div className="flex gap-8">
+          <button className="btn btn-ghost" onClick={() => exportToCSV(filtered)}>⬇ Export CSV</button>
+          <button className="btn btn-primary" onClick={() => { setForm(BLANK); setEditId(null); setShowAdd(true); }}>+ Add Company</button>
+        </div>
       </div>
 
       {/* Add/Edit Modal */}
