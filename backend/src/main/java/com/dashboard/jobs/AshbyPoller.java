@@ -55,7 +55,10 @@ public class AshbyPoller {
     }
 
     private boolean isRelevant(String title) {
-        String t = title.toLowerCase();
-        return t.contains("software engineer") || t.contains("swe") || t.contains("developer");
+    String t = title.toLowerCase();
+    boolean isSwe = t.contains("software engineer") || t.contains("swe") || t.contains("developer");
+    boolean isSenior = t.contains("senior") || t.contains("staff") || t.contains("principal")
+                     || t.contains("lead") || t.contains("director") || t.contains("manager");
+    return isSwe && !isSenior;
     }
 }
