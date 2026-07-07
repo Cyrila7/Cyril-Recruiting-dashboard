@@ -15,6 +15,7 @@ across the internet, and emails you the second a new Software Engineer role goes
 ## Setup
 
 ### 1. Add a free database
+
 The app needs somewhere to remember which jobs it's already told you about, so you don't get
 the same alert twice.
 
@@ -22,28 +23,28 @@ the same alert twice.
    separate one, Railway's variable linking only works within one project), click
    **+ New → Database → Add PostgreSQL**
 
-    ![Postgres and backend side by side](screenshots/railway-canvas.png)
+   ![Postgres and backend side by side](../screenshots/railway-canvas.png)
 
 2. Go into your backend service → **Variables** tab → **New Variable** → use **Add Reference** to
    link these five values from the Postgres service:
    `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`
 
-    ![Add Reference dropdown](screenshots/railway-add-reference.png)
+   ![Add Reference dropdown](../screenshots/railway-add-reference.png)
 
 3. Redeploy — the app sets up what it needs in the database automatically on first boot
 
-    ![Final variable list](screenshots/railway-final-variables.png)
-
+   ![Final variable list](../screenshots/railway-final-variables.png)
 
 ### 2. Get a free Adzuna API key
+
 1. Register for free at [developer.adzuna.com](https://developer.adzuna.com/)
 2. Copy your `app_id` and `app_key`
 3. Add them as environment variables in Railway:
-
 ADZUNA_APP_ID=your_app_id_here
 ADZUNA_APP_KEY=your_app_key_here
 
 ### 3. Add your target companies
+
 Open `backend/src/main/java/com/dashboard/jobs/CompanyAtsConfig.java`. Each company needs:
 - Its name
 - Which hiring platform it uses (`GREENHOUSE` or `ASHBY`)
