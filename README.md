@@ -1,20 +1,34 @@
-# CyrilHQ — Your Personal Command Center
+# ⚡ CyrilHQ — Your Personal Recruiting Command Center
 
-> Built by [Cyril Annoh](https://www.linkedin.com/in/cyril-annoh/) · If you use this, tag me on LinkedIn for credit 🙏
+> Built by [Cyril Annoh](https://www.linkedin.com/in/cyril-annoh/) · If you use this, tag me on LinkedIn 🙏
 
-This was created to help students with summer recruitment prep instead of having to do it all in an Excel spreadsheet.
+A free, personal dashboard to help you survive internship/job recruiting season without living in
+a messy spreadsheet. Track your applications, practice DSA problems, and get emailed the moment
+a new job opens at companies you care about.
 
-A full-stack personal dashboard for CS students in internship recruiting season.
-Built for my own Summer 2027 recruiting grind — feel free to fork and make it yours.
+Built for my own Summer 2027 recruiting grind. Feel free to fork it and make it yours — you don't
+need to be an experienced developer to get this running. Just follow the steps below.
 
-## Features
-- 🎯 **Career Tracker** — 97 companies pre-loaded, track Applied/OA/Interview/Result, add new companies, opening date countdown
-- 💻 **NeetCode 150 Tracker** — Track all 150 NeetCode problems, mark mastered/in progress, add pattern notes
-- 📝 **Notes** — Capture DSA patterns, ideas, follow-ups by tag
-- 🔗 **Links** — Save important career/DSA/project links
-- 🌡️ **Mood Tracker** — Daily check-ins
-- 🔔 **Reminders** — Send yourself HTML email reminders, schedule future ones
-- 📧 **Auto Emails** — Daily NeetCode reminder (9am ET) + Weekly digest (Monday 8am ET)
+---
+
+## What This Actually Does
+
+- 🎯 **Career Tracker** — Every company you're targeting, in one table. Track Applied → OA →
+  Interview → Result, see how many days until applications open, star your top choices.
+- 💻 **NeetCode 150 Tracker** — All 150 classic coding interview problems, organized by pattern,
+  with progress bars so you can see exactly where you stand.
+- 📝 **Notes** — Jot down interview prep notes, patterns you keep forgetting, follow-ups.
+- 🔗 **Links** — Save useful career/prep/project links in one place.
+- 🌡️ **Mood Tracker** — Quick daily check-ins during a stressful season.
+- 🔔 **Email Reminders** — Send yourself reminders, or schedule future ones.
+- 📧 **Daily/Weekly Digest** — Automatic email every morning with your DSA progress, and every
+  Monday with a summary of what's coming up.
+- 🚨 **New Job Alerts** — Checks your target companies' job boards every 15 minutes and emails you
+  the second a new Software Engineer role goes live. Works fully on its own — the optional Adzuna
+  integration just widens the search to catch companies you haven't added yourself.
+  [See full setup →](docs/JOB_ALERTS.md)
+
+---
 
 ## Screenshots
 
@@ -27,116 +41,145 @@ Built for my own Summer 2027 recruiting grind — feel free to fork and make it 
 **NeetCode 150 Tracker** — all 150 problems organized by section, with progress bars and per-problem pattern notes.
 ![NeetCode 150](screenshots/neetcode-tracker.png)
 
-## What this isn't
-This is a personal tool, not a SaaS product. There's no multi-user login, no real database, and email scheduling is in-memory and resets if the backend restarts. If you want something more robust, fork it and build on top.
+---
 
-Company career page links may change over time. If one breaks, search the company name + "careers" or go straight to their main careers page.
+## What This Isn't
 
-## How Data Works
-**`companies.js` is seed data, not a live source.** The first time the app loads, it copies everything into your browser's localStorage. After that, the app reads and writes from localStorage only.
+This is a personal tool, not a polished product. There's no login system, no multi-user support,
+and most of your data (companies, notes, links, mood) lives in your own browser only — nothing
+gets uploaded anywhere except for the job alert feature, which needs a small database
+([details here](docs/JOB_ALERTS.md)).
 
-Key things to know:
-- Editing `companies.js` and pushing it won't update your own browser until you clear localStorage and reload.
-- Adding or editing a company through the UI only saves to your local browser session, not back to the source file.
-- Email reminders do include UI-added companies since the backend reads live data, not the static file.
-
-**To force a re-sync after editing `companies.js`:** open DevTools (Cmd+Option+I on Mac, F12 on Windows), go to the Console tab, run `localStorage.clear()`, then refresh. This wipes all locally stored data including notes, links, and application status, so write anything important down first.
-
-## No Java or Spring Boot experience?
-Don't let that stop you. Use AI (Claude, ChatGPT, whatever you've got) to help read through the code and get it running. The codebase is straightforward and well-commented. If you genuinely get stuck, message me on [LinkedIn](https://www.linkedin.com/in/cyril-annoh/) and I'll help.
-
-**Good luck on your SWE search.**
+If a company career link breaks over time, just search the company name + "careers."
 
 ---
 
-## Personalize It First
+## Incase You dont have any Java or springboot experience?
 
-Before running, update these to match your info:
+You do not need to know Java, React, or how any of this works under the hood to use this. Just
+follow the steps below in order, and change a few things to match your own info.
 
-**1. Your email (most important)** — search and replace `cyrrilann@gmail.com` with your own email across:
+If you get stuck, paste the error message into Claude, ChatGPT, or whichever AI assistant you
+have and ask it to explain what's happening - that's a completely normal way to use this project.
+Or message me on [LinkedIn](https://www.linkedin.com/in/cyril-annoh/).
+
+---
+
+## Step 1: Make It Yours
+
+### Your email address
+Search the project for `cyrrilann@gmail.com` and replace it with your own email in these three files:
 - `backend/src/main/java/com/dashboard/controller/ReminderController.java`
 - `backend/src/main/java/com/dashboard/scheduler/WeeklyDigestScheduler.java`
 - `frontend/src/components/Reminders.jsx`
 
-**2. Your companies** — `frontend/src/data/companies.js` has 97 companies pre-loaded for a NYC CS student. Keep them as a starting point or clear them out and add your own. See "How Data Works" above if your browser doesn't reflect changes after editing this file.
+### Your companies (for the Career Tracker)
+Open `frontend/src/data/companies.js`. There are 97 companies pre-loaded — these were my personal
+targets. Keep them as a starting point, or delete them and add your own.
 
-**3. Your NeetCode progress** — in the same `companies.js` file, scroll to the `NEETCODE_150` export and update each `status` field to reflect what you've already solved: `"not started"`, `"in progress"`, or `"mastered"`.
+> ⚠️ **Important:** if you edit this file after you've already opened the app once in your
+> browser, your changes won't show up automatically. To force a re-sync: open your browser's dev
+> tools (`Cmd+Option+I` on Mac, `F12` on Windows), click **Console**, type `localStorage.clear()`,
+> hit Enter, then refresh. This wipes everything stored locally, so save anything important first.
 
-**4. Weekly email links** — `WeeklyDigestScheduler.java` has company links specific to my targets. Swap them for yours.
-
-**5. Resend API key** — emails go through [Resend](https://resend.com) (free tier) instead of raw SMTP, because most hosts block outbound SMTP. Sign up with the email you want to send from, grab an API key, and set it as `RESEND_API_KEY` in your environment.
+### Your NeetCode progress
+In that same `companies.js` file, scroll to `NEETCODE_150` and update each problem's `status` to
+`"not started"`, `"in progress"`, or `"mastered"` based on what you've actually solved.
 
 ---
 
-## Setup
+## Step 2: Run It On Your Computer
 
-### Prerequisites
-- Node.js 18+
-- Java 21
-- Maven
+### What you need installed
+- [Node.js](https://nodejs.org) (18+)
+- [Java 21](https://adoptium.net)
+- [Maven](https://maven.apache.org/download.cgi)
 
-### 1. Frontend
-\`\`\`bash
+Check with `node -v`, `java -version`, `mvn -v` in your terminal.
+
+### Start the frontend
+```bash
 cd frontend
 npm install
 npm run dev
-\`\`\`
-Opens at http://localhost:5173
+```
+Opens at **http://localhost:5173**
 
-### 2. Backend (Email via Resend)
+### Start the backend
+Emails are sent through [Resend](https://resend.com), a free service, because most hosting
+platforms block traditional email-sending methods.
 
-1. Sign up at [resend.com](https://resend.com) using the email you want reminders sent from/to
-2. Grab your API key from the dashboard
+1. Sign up at resend.com using the email you want alerts sent to
+2. Copy your API key from the dashboard
 3. Set it as an environment variable:
-\`\`\`bash
-export RESEND_API_KEY=re_your_key_here
-\`\`\`
+```bash
+   export RESEND_API_KEY=re_your_key_here
+```
+4. Start the backend:
+```bash
+   cd backend
+   mvn spring-boot:run
+```
+   Runs at **http://localhost:8080**
 
-**Run the backend:**
-\`\`\`bash
-cd backend
-mvn spring-boot:run
-\`\`\`
-Runs on http://localhost:8080
+> **Mac users:** if this fails, try `export JAVA_HOME=/opt/homebrew/opt/openjdk@21` first.
 
-> **Note:** On Mac with Homebrew, you may need to run `export JAVA_HOME=/opt/homebrew/opt/openjdk@21` first. On Windows/Linux, just make sure Java 21 is on your PATH.
-
-### 3. Test it works
-Visit http://localhost:8080/api/reminders/health and you should get `{ "status": "CyrilHQ backend running ✅" }`
+### Confirm it's working
+Visit **http://localhost:8080/api/reminders/health** — you should see:
+```json
+{ "status": "CyrilHQ backend running ✅" }
+```
 
 ---
 
-## Deploy to Vercel (Frontend)
+## Step 3: Put It Online
 
-\`\`\`bash
+### Frontend → Vercel
+```bash
 cd frontend
 npm run build
-\`\`\`
-Push to GitHub, connect to Vercel, set **Root Directory** to `frontend`, and deploy.
+```
+Push to GitHub, connect to [Vercel](https://vercel.com), set **Root Directory** to `frontend`,
+and add environment variable `VITE_BACKEND_URL` = your Railway backend URL.
 
-Add this environment variable in Vercel (apply to all environments including Production):
-\`\`\`
-VITE_BACKEND_URL=https://your-backend-url.com
-\`\`\`
-
-## Deploy Backend (Railway)
-
-Push to GitHub, connect Railway, set **Root Directory** to `backend`, and add:
-\`\`\`
-RESEND_API_KEY=re_your_key_here
-\`\`\`
-Railway auto-detects Maven and builds it. Railway blocks outbound SMTP, which is why this uses Resend's HTTP API instead of JavaMailSender.
+### Backend → Railway
+Connect your GitHub repo to [Railway](https://railway.app), set **Root Directory** to `backend`,
+add `RESEND_API_KEY`. Railway auto-detects and builds the Java project.
 
 ---
 
-## Data Persistence
-All data (companies, notes, links, mood) is saved in localStorage and persists across sessions in the same browser. No database required for the frontend. See "How Data Works" above for details.
+## Step 4: Job Alerts (Optional)
 
-Email scheduling is in-memory. Scheduled reminders are lost if the backend restarts before they fire. Fine for a personal tool, not production-grade.
+Want to get emailed instantly when a new job opens? This needs a small free database. Adzuna (a
+free API that widens the search beyond your company list) is a nice-to-have on top, not required
+— the core alerts work great without it. **[Full setup guide →](docs/JOB_ALERTS.md)**
+
+---
+
+## How Your Data Is Stored
+
+- **Companies, notes, links, mood** — saved in your browser only, nothing uploaded.
+- **Job alert history** — stored in a small database (see Job Alerts guide), just job titles/IDs,
+  no personal info.
+- **Scheduled reminders** — in-memory, lost if the backend restarts. Fine for personal use.
+
+---
+
+## Something Broke?
+
+- **Job alerts stopped** — check [Resend's dashboard](https://resend.com) for your daily email limit.
+- **App won't start locally** — confirm Node 18+, Java 21, Maven are installed, and you ran
+  `npm install` in `frontend` first.
+- **Career Tracker changes aren't showing** — see the `localStorage.clear()` note in Step 1.
+- **Still stuck?** Ask an AI assistant, or reach out on [LinkedIn](https://www.linkedin.com/in/cyril-annoh/).
 
 ---
 
 ## License
-MIT License. You're free to use, copy, modify, and distribute this code for any purpose with no restrictions. The only requirement is that the original copyright notice stays in the code somewhere. A LinkedIn tag is appreciated but not required.
+
+MIT License — free to use, copy, modify, and share for any purpose. Keep the original copyright
+notice somewhere in the code. A LinkedIn tag is appreciated but never required.
+
+---
 
 *Built by Cyril Annoh · NYC College of Technology (CUNY) · CS Student · Bronx, NY*
