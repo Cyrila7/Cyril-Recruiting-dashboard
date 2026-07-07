@@ -18,13 +18,15 @@ public class JobAlertScheduler {
 
     private static final String ALERT_EMAIL = "cyrrilann@gmail.com";
 
-    @Scheduled(fixedRate = 900000) // every 15 minutes
+    @Scheduled(fixedRate = 900000)
     public void pollForNewJobs() {
         for (CompanyConfig company : CompanyAtsConfig.COMPANIES) {
             List<JobPosting> jobs = switch (company.atsType()) {
                 case GREENHOUSE -> greenhousePoller.fetchJobs(company.boardToken(), company.euHost());
                 case ASHBY -> ashbyPoller.fetchJobs(company.boardToken());
             };
+
+            boolean isFirstRunForCompany = seenJobRepository.countByCompanyName(company.companyName()) == 0;
 
             for (JobPosting job : jobs) {
                 boolean alreadySeen = seenJobRepository.existsByCompanyNameAndExternalJobId(
@@ -36,7 +38,9 @@ public class JobAlertScheduler {
                     company.companyName(), job.externalId(), job.title(), job.url()
                 ));
 
-                sendAlertEmail(company.companyName(), job);
+                if (!isFirstRunForCompany) {
+                    sendAlertEmail(company.companyName(), job);
+                }
             }
         }
         System.out.println("Job poll complete: " + CompanyAtsConfig.COMPANIES.size() + " companies checked.");
