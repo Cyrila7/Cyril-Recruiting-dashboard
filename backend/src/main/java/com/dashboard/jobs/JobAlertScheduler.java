@@ -30,35 +30,41 @@ public class JobAlertScheduler {
     }
 
     private int pollTargetCompanies() {
-        int sent = 0;
-        for (CompanyConfig company : CompanyAtsConfig.COMPANIES) {
-            List<JobPosting> jobs = switch (company.atsType()) {
-                case GREENHOUSE -> greenhousePoller.fetchJobs(company.boardToken(), company.euHost());
-                case ASHBY -> ashbyPoller.fetchJobs(company.boardToken());
-            };
+    int sent = 0;
+    for (CompanyConfig company : CompanyAtsConfig.COMPANIES) {
+        List<JobPosting> jobs = switch (company.atsType()) {
+            case GREENHOUSE -> greenhousePoller.fetchJobs(company.boardToken(), company.euHost());
+            case ASHBY -> ashbyPoller.fetchJobs(company.boardToken());
+        };
 
-            boolean isFirstRunForCompany = seenJobRepository.countByCompanyName(company.companyName()) == 0;
+        boolean isFirstRunForCompany = seenJobRepository.countByCompanyName(company.companyName()) == 0;
 
-            for (JobPosting job : jobs) {
-                if (sent >= MAX_EMAILS_PER_CYCLE) return sent;
+        for (JobPosting job : jobs) {
+            if (sent >= MAX_EMAILS_PER_CYCLE) return sent;
 
-                boolean alreadySeen = seenJobRepository.existsByCompanyNameAndExternalJobId(
-                    company.companyName(), job.externalId()
-                );
-                if (alreadySeen) continue;
+            // Extra per-company keyword filter (e.g. Anduril → only "intern" roles) so you dont keep getting all their companies roles thats why its here 
+            if (company.requiredKeyword() != null &&
+                !job.title().toLowerCase().contains(company.requiredKeyword().toLowerCase())) {
+                continue;
+            }
 
-                seenJobRepository.save(new SeenJob(
-                    company.companyName(), job.externalId(), job.title(), job.url()
-                ));
+            boolean alreadySeen = seenJobRepository.existsByCompanyNameAndExternalJobId(
+                company.companyName(), job.externalId()
+            );
+            if (alreadySeen) continue;
 
-                if (!isFirstRunForCompany) {
-                    sendAlertEmail(company.companyName(), job.title(), job.url());
-                    sent++;
-                }
+            seenJobRepository.save(new SeenJob(
+                company.companyName(), job.externalId(), job.title(), job.url()
+            ));
+
+            if (!isFirstRunForCompany) {
+                sendAlertEmail(company.companyName(), job.title(), job.url());
+                sent++;
             }
         }
-        return sent;
-    }
+        }
+    return sent;
+        }
 
     private int pollAdzuna(int alreadySentThisCycle) {
         int sent = 0;
