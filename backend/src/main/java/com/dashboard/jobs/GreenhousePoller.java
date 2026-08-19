@@ -29,6 +29,7 @@ public class GreenhousePoller {
                 .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
             if (response.statusCode() != 200) {
                 System.err.println("Greenhouse fetch failed for " + boardToken + ": " + response.statusCode());
                 return results;
@@ -42,24 +43,25 @@ public class GreenhousePoller {
                 if (!isRelevant(title)) continue;
 
                 results.add(new JobPosting(
-                    job.path("id").asText(),
+                    job.path("id").asText(""),
                     title,
                     job.path("absolute_url").asText(""),
                     job.path("updated_at").asText("")
                 ));
             }
         } catch (Exception e) {
-            System.err.println("GreenhousePoller error for " + boardToken + ": " + e.getMessage());
+            System.err.println("GreenhousePoller error for " + boardToken + ": " + e.getClass().getSimpleName()
+                + (e.getMessage() != null ? " - " + e.getMessage() : ""));
+            e.printStackTrace();
         }
-
         return results;
     }
 
     private boolean isRelevant(String title) {
-    String t = title.toLowerCase();
-    boolean isSwe = t.contains("software engineer") || t.contains("swe") || t.contains("developer");
-    boolean isSenior = t.contains("senior") || t.contains("staff") || t.contains("principal")
-                     || t.contains("lead") || t.contains("director") || t.contains("manager");
-    return isSwe && !isSenior;
+        String t = title.toLowerCase();
+        boolean isSwe = t.contains("software engineer") || t.contains("swe") || t.contains("developer");
+        boolean isSenior = t.contains("senior") || t.contains("staff") || t.contains("principal")
+                         || t.contains("lead") || t.contains("director") || t.contains("manager");
+        return isSwe && !isSenior;
     }
 }
