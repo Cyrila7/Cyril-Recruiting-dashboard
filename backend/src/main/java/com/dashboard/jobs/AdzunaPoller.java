@@ -31,7 +31,9 @@ public class AdzunaPoller {
 
     private static final List<String> QUERIES = List.of(
         "software engineer intern",
-        "software engineer intern 2027"
+        "software engineer intern 2027",
+        "product manager intern",
+        "product management intern 2027"
     );
 
     // Company name fragments to exclude (matched as substrings, lowercase).
@@ -54,6 +56,7 @@ public class AdzunaPoller {
         "saic",
         "peraton",
         "parsons corporation",
+        "parsons",
         "mitre",
         "jacobs engineering",
         "amentum"
@@ -61,8 +64,8 @@ public class AdzunaPoller {
 
     // Keywords in the description that signal a clearance-gated defense/gov role.
     // Description text from Adzuna's search endpoint is often truncated, so this
-    // is a secondary net, not a primary filter  the company blocklist above
-    // catches most of the volume. keep in mind that if you fork it you can always change it this just myyy prefrences.
+    // is a secondary net, not a primary filter — the company blocklist above
+    // catches most of the volume.
     private static final Set<String> CLEARANCE_KEYWORDS = Set.of(
         "security clearance",
         "u.s. citizenship required",
@@ -75,7 +78,7 @@ public class AdzunaPoller {
     );
 
     public List<AdzunaPosting> fetchJobs() {
-        // Dedup across both queries by job id, since they'll overlap a lot
+        // Dedup across all queries by job id, since they'll overlap a lot
         Map<String, AdzunaPosting> results = new LinkedHashMap<>();
         for (String query : QUERIES) {
             for (AdzunaPosting posting : fetchForQuery(query)) {
@@ -115,12 +118,12 @@ public class AdzunaPoller {
                 String company = job.path("company").path("display_name").asText("Unknown");
                 String description = job.path("description").asText("");
 
-                if (!isRelevant(title)) continue;
+                if (!isRelevant(title, rawQuery)) continue;
                 if (isBlockedCompany(company)) continue;
                 if (requiresClearance(description)) continue;
 
                 results.add(new AdzunaPosting(
-                    job.path("id").asText(),
+                    job.path("id").asText(""),
                     title,
                     company,
                     job.path("redirect_url").asText(""),
@@ -128,17 +131,33 @@ public class AdzunaPoller {
                 ));
             }
         } catch (Exception e) {
-            System.err.println("AdzunaPoller error for '" + rawQuery + "': " + e.getMessage());
+            System.err.println("AdzunaPoller error for '" + rawQuery + "': " + e.getClass().getSimpleName()
+                + (e.getMessage() != null ? " - " + e.getMessage() : ""));
+            e.printStackTrace();
         }
         return results;
     }
 
-    private boolean isRelevant(String title) {
+    // isRelevant now branches by query type: SWE queries filter for engineer/developer
+    // titles, PM queries filter for product manager/product management titles.
+    // Both exclude senior-level titles either way.
+    private boolean isRelevant(String title, String sourceQuery) {
         String t = title.toLowerCase();
-        boolean isSwe = t.contains("software engineer") || t.contains("swe") || t.contains("developer");
         boolean isSenior = t.contains("senior") || t.contains("staff") || t.contains("principal")
-                         || t.contains("lead") || t.contains("director") || t.contains("manager");
-        return isSwe && !isSenior;
+                         || t.contains("lead") || t.contains("director") || t.contains("manager")
+                             && !t.contains("product manager"); // don't exclude "product manager" itself
+
+        boolean isPmQuery = sourceQuery.toLowerCase().contains("product manager")
+                          || sourceQuery.toLowerCase().contains("product management");
+
+        if (isPmQuery) {
+            boolean isPm = t.contains("product manager") || t.contains("product management")
+                         || t.contains("associate product manager") || t.contains("apm");
+            return isPm && !isSenior;
+        } else {
+            boolean isSwe = t.contains("software engineer") || t.contains("swe") || t.contains("developer");
+            return isSwe && !isSenior;
+        }
     }
 
     private boolean isBlockedCompany(String company) {
