@@ -1,4 +1,4 @@
-# ⚡ CyrilHQ — Your Personal Recruiting Command Center
+#  CyrilHQ  Your Personal Recruiting Command Center
 
 > Built by [Cyril Annoh](https://www.linkedin.com/in/cyril-annoh/) · If you use this, tag me on LinkedIn 🙏
 
@@ -13,17 +13,17 @@ need to be an experienced developer to get this running. Just follow the steps b
 
 ## What This Actually Does
 
-- 🎯 **Career Tracker** — Every company you're targeting, in one table. Track Applied → OA →
+-  **Career Tracker** — Every company you're targeting, in one table. Track Applied → OA →
   Interview → Result, see how many days until applications open, star your top choices.
-- 💻 **NeetCode 150 Tracker** — All 150 classic coding interview problems, organized by pattern,
+- **NeetCode 150 Tracker** — All 150 classic coding interview problems, organized by pattern,
   with progress bars so you can see exactly where you stand.
-- 📝 **Notes** — Jot down interview prep notes, patterns you keep forgetting, follow-ups.
-- 🔗 **Links** — Save useful career/prep/project links in one place.
-- 🌡️ **Mood Tracker** — Quick daily check-ins during a stressful season.
+- **Notes** — Jot down interview prep notes, patterns you keep forgetting, follow-ups.
+- **Links** — Save useful career/prep/project links in one place.
+- **Mood Tracker** — Quick daily check-ins during a stressful season.
 - 🔔 **Email Reminders** — Send yourself reminders, or schedule future ones.
-- 📧 **Daily/Weekly Digest** — Automatic email every morning with your DSA progress, and every
+- **Daily/Weekly Digest** — Automatic email every morning with your DSA progress, and every
   Monday with a summary of what's coming up.
-- 🚨 **New Job Alerts** — Checks your target companies' job boards every 15 minutes and emails you
+-  **New Job Alerts** — Checks your target companies' job boards every 15 minutes and emails you
   the second a new Software Engineer role goes live. Works fully on its own — the optional Adzuna
   integration just widens the search to catch companies you haven't added yourself.
   [See full setup →](docs/JOB_ALERTS.md)
