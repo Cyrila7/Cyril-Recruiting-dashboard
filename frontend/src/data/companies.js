@@ -125,6 +125,36 @@ export const COMPANIES = [
   { id: 123, tier: "Strong Tech", company: "IMC Trading", role: "SWE Intern", opens: "2026-07-01", url: "", priority: 1, notes: "Trading firm — applied before fully deprioritizing this category", applied: true, oa: true, interview: false, result: "Rejected" },
 ];
 
+export const NEW_ENTRIES_TO_APPEND = [
+  { id: 124, tier: "Fintech/Banks", company: "Mastercard", role: "Technical Program Management Intern", opens: "2026-08-01", url: "", priority: 3, notes: "NYC, $27-34/hr, grad-year Dec 2027-June 2029, TPM hybrid role (delivery/execution across eng teams) — good middle ground for PM pivot", applied: true, oa: false, interview: false, result: "" },
+  { id: 125, tier: "Great Targets", company: "Intel", role: "Software Engineering Intern, Bachelor's", opens: "2026-08-01", url: "", priority: 2, notes: "OR/CA/TX/AZ, $46/hr, on-site, no NYC option. Selected Cloud/App Development track over Firmware/GPU", applied: true, oa: false, interview: false, result: "" },
+  { id: 126, tier: "Great Targets", company: "DraftKings", role: "Software Engineer Intern", opens: "2026-08-01", url: "", priority: 2, notes: "Boston, publicly traded (DKNG), Java listed, testing knowledge required (real gap), may need gaming license", applied: true, oa: false, interview: false, result: "" },
+  { id: 127, tier: "Great Targets", company: "Clearwater Analytics", role: "Product Management Intern (R12200)", opens: "2026-08-01", url: "", priority: 3, notes: "NYC, real fintech (CWAN), Python-heavy technical PM role — real stack stretch. Used PM resume", applied: true, oa: false, interview: false, result: "" },
+  { id: 128, tier: "Great Targets", company: "Clearwater Analytics", role: "Technical Product Management Intern (R12058)", opens: "2026-08-01", url: "", priority: 3, notes: "NYC, same company diff req — title says PM but content is actual SWE work, Java required. Used SWE resume", applied: true, oa: false, interview: false, result: "" },
+  { id: 129, tier: "Great Targets", company: "Vanguard", role: "College to Corporate IT Internship - Technical Product Manager", opens: "2026-09-01", url: "", priority: 3, notes: "Dallas/Charlotte/Malvern PA, hybrid, real PM fundamentals training (discovery, user stories, sprint ceremonies), GPA 3.2+ preferred. Used PM resume", applied: true, oa: false, interview: false, result: "" },
+  { id: 130, tier: "Great Targets", company: "Atlassian", role: "Product Management Intern", opens: "2026-08-01", url: "", priority: 3, notes: "SF/Remote (Pacific Timezone required), $42-57/hr by zone, grad-year fits June 2028, no formal PM experience required. Used PM resume", applied: true, oa: false, interview: false, result: "" },
+  { id: 131, tier: "Great Targets", company: "Roblox", role: "Product Management Intern", opens: "2026-08-01", url: "", priority: 3, notes: "Real PM role, submitted age-cohort segmentation feature answer tying to laundry tier work. Used PM resume", applied: true, oa: false, interview: true, result: "Advanced to assessments stage (Robots, Factories, Decision-Making timed tasks)" },
+  { id: 132, tier: "Well-Funded Startups", company: "C3 AI", role: "Software Engineer, Platform Intern", opens: "2026-08-01", url: "", priority: 2, notes: "Redwood City, 5x/week onsite, $8-10K/mo, Java listed. Selected Platform track over Forward Deployed Engineer", applied: true, oa: false, interview: false, result: "" },
+  { id: 133, tier: "Well-Funded Startups", company: "Whatnot", role: "Software Engineer Intern", opens: "2026-08-01", url: "", priority: 3, notes: "NYC/SF hybrid, $65/hr, housing & relocation stipend, live commerce marketplace — good overlap with CUNYswap. Used SWE resume", applied: true, oa: false, interview: false, result: "" },
+  { id: 134, tier: "Great Targets", company: "Garner Health", role: "Software Engineering Intern", opens: "2026-08-01", url: "", priority: 3, notes: "NYC, 3 days/week hybrid, $2,400/week + housing stipend, real healthcare-tech mission aligned with FHIR/HL7 direction, Claude Code core tool, grad-year Fall 2027-Spring 2028 fits. Strong match", applied: true, oa: false, interview: false, result: "" },
+  { id: 135, tier: "Great Targets", company: "EY", role: "EY Foundry Product Manager Intern (Chelsea)", opens: "2026-08-01", url: "", priority: 2, notes: "NYC, $48.08/hr, internal AI product incubator (despite Tax org placement), real PM work (user research, user stories). Note: EY caps at 2 apps per 6mo — used one here. PM resume", applied: true, oa: false, interview: false, result: "" },
+  { id: 136, tier: "Great Targets", company: "Kastle", role: "Software Engineer Intern", opens: "2026-08-01", url: "", priority: 2, notes: "SF, on-site, YC/Commerce Ventures backed, AI agents for consumer lending, Java listed, real agentic-AI depth gap. Used PathPilot story for 'most exciting project'", applied: true, oa: false, interview: false, result: "" },
+  { id: 137, tier: "Great Targets", company: "SAP", role: "Software Engineering Intern", opens: "2026-08-01", url: "", priority: 2, notes: "Hit file upload error (active content in PDF) — needs clean re-export before resubmitting", applied: false, oa: false, interview: false, result: "" },
+  { id: 138, tier: "Great Targets", company: "Microsoft", role: "AI Software Engineering Intern (CoreAI, job 200046156)", opens: "2026-08-01", url: "", priority: 3, notes: "Redmond, first CoreAI req applied", applied: true, oa: false, interview: false, result: "Rejected" },
+  { id: 139, tier: "Great Targets", company: "The Trade Desk", role: "2027 NA Software Engineering Internship", opens: "2026-07-15", url: "", priority: 2, notes: "Not a trading firm (adtech) — role closed entirely due to business needs, not candidate-specific", applied: true, oa: false, interview: false, result: "Role closed by company" },
+  { id: 140, tier: "Fintech/Banks", company: "GE Vernova", role: "Internship", opens: "2026-08-01", url: "", priority: 1, notes: "", applied: true, oa: false, interview: false, result: "Rejected" },
+  { id: 141, tier: "Fintech/Banks", company: "Parsons Corporation", role: "Internship", opens: "2026-08-01", url: "", priority: 1, notes: "Defense contractor — realized after rejection, reinforced deprioritizing this category", applied: true, oa: false, interview: false, result: "Rejected" },
+];
+
+// SKIPPED TODAY (not applied, logged for reference):
+// - Visionist Inc — defense/intelligence, TS/SCI clearance required, citizens-only
+// - Rivian/VW Group Technologies — Jan-Aug 2027 (7mo, semester conflict), Kotlin/C++/Android stack mismatch
+// - Premier Healthcare Solutions — Charlotte NC, healthcare-tech but front-end-focused (React/JS primary), backend is secondary fit
+// - Apex Technology (satellite/embedded) — C++/C required, wrong grad-year window
+// - Southwest Airlines — NY explicitly excluded from remote eligibility list
+// - Walt Disney World — Spring 2027, 6-month full-time, semester conflict
+// - TELUS Digital — applied with honest "hadn't heard of you" framing (see application notes)
+
 export const NEETCODE_150 = [
   // Arrays & Hashing (9)
   { id: 1, section: "Arrays & Hashing", name: "Contains Duplicate", leetcode: 217, difficulty: "Easy", status: "mastered", notes: "HashMap O(n)" },
