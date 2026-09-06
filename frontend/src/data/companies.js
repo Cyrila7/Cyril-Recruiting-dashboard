@@ -123,9 +123,7 @@ export const COMPANIES = [
   { id: 121, tier: "Fintech/Banks", company: "Synchrony", role: "SWE Intern", opens: "2026-08-01", url: "", priority: 2, notes: "", applied: true, oa: false, interview: false, result: "Rejected" },
   { id: 122, tier: "Great Targets", company: "iHerb", role: "SWE Intern", opens: "2026-08-01", url: "", priority: 2, notes: "", applied: true, oa: false, interview: false, result: "Rejected" },
   { id: 123, tier: "Strong Tech", company: "IMC Trading", role: "SWE Intern", opens: "2026-07-01", url: "", priority: 1, notes: "Trading firm — applied before fully deprioritizing this category", applied: true, oa: true, interview: false, result: "Rejected" },
-];
 
-export const NEW_ENTRIES_TO_APPEND = [
   { id: 124, tier: "Fintech/Banks", company: "Mastercard", role: "Technical Program Management Intern", opens: "2026-08-01", url: "", priority: 3, notes: "NYC, $27-34/hr, grad-year Dec 2027-June 2029, TPM hybrid role (delivery/execution across eng teams) — good middle ground for PM pivot", applied: true, oa: false, interview: false, result: "" },
   { id: 125, tier: "Great Targets", company: "Intel", role: "Software Engineering Intern, Bachelor's", opens: "2026-08-01", url: "", priority: 2, notes: "OR/CA/TX/AZ, $46/hr, on-site, no NYC option. Selected Cloud/App Development track over Firmware/GPU", applied: true, oa: false, interview: false, result: "" },
   { id: 126, tier: "Great Targets", company: "DraftKings", role: "Software Engineer Intern", opens: "2026-08-01", url: "", priority: 2, notes: "Boston, publicly traded (DKNG), Java listed, testing knowledge required (real gap), may need gaming license", applied: true, oa: false, interview: false, result: "" },
