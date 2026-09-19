@@ -1,4 +1,4 @@
-# CyrilHQ — Automated Recruiting Pipeline
+# CyrilHQ —> Automated Recruiting Pipeline
 
 CyrilHQ is a personal recruiting tool I built to automate part of my Summer 2027 internship search.
 
