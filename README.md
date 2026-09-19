@@ -4,7 +4,11 @@ CyrilHQ is a personal recruiting tool I built to automate part of my Summer 2027
 
 Instead of repeatedly checking job boards, the backend checks multiple job sources every 15 minutes, filters the results for roles I'm interested in, tracks jobs it has already seen, and emails me when it finds a new opening.
 
-I built this project while learning Java and Spring Boot to practice working with external APIs, scheduled tasks, database persistence, filtering, and email automation.
+## CyrilHQ in Action
+
+![CyrilHQ automated recruiting pipeline](screenshots/cyrilhq-recruiting-pipeline.png)
+
+CyrilHQ checks job sources every 15 minutes, filters relevant openings, tracks jobs it has already seen, and emails me when it discovers a new match.
 
 ## How It Works
 
@@ -31,15 +35,7 @@ The pipeline runs automatically every 15 minutes:
 **Frontend:** React, Vite  
 **Job Sources / APIs:** Adzuna, Greenhouse, Ashby  
 **Email:** Resend API  
-**Deployment:** Railway, Vercel  
-
-## CyrilHQ in Action
-
-![CyrilHQ automated recruiting pipeline](screenshots/cyrilhq-recruiting-pipeline.png)
-
-CyrilHQ checks job sources every 15 minutes, filters relevant openings, tracks jobs it has already seen, and emails me when it discovers a new match.
-
-The image above shows the full flow from job discovery to the email alert I receive when CyrilHQ finds a new opening.
+**Deployment:** Railway, Vercel
 
 ## Running Locally
 
@@ -79,6 +75,8 @@ The frontend is deployed with Vercel and the Spring Boot backend is deployed wit
 Internship recruiting involves repeatedly checking company career pages and job boards. I wanted a simple way to automate some of that work while applying what I was learning about Java and backend development.
 
 CyrilHQ started as a recruiting dashboard, but the more useful part became the automated job pipeline behind it: fetch jobs, filter them, remember what has already been seen, and notify me when something new appears.
+
+I built this project while learning Java and Spring Boot to practice working with external APIs, scheduled tasks, database persistence, filtering, and email automation.
 
 This is a personal learning project, not a large-scale recruiting platform. I built it to solve a problem I actually had and to get more hands-on experience with backend development.
 
