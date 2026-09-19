@@ -8,14 +8,17 @@ I built this project while learning Java and Spring Boot to practice working wit
 
 ## How It Works
 
-![CyrilHQ recruiting pipeline architecture](screenshots/recruiting-pipeline.svg)
+Greenhouse and Ashby are used to monitor job boards for companies I'm specifically targeting. Adzuna widens the search beyond that list and helps discover additional Software Engineering and Product Management internship postings.
 
-Greenhouse and Ashby are used to monitor job boards for companies I'm specifically targeting. Adzuna widens the search beyond that list and helps discover additional SWE and Product Management internship postings.
+The pipeline runs automatically every 15 minutes:
+
+**Job Sources → Scheduled Polling → Filter Results → Check Previously Seen Jobs → Save New Jobs → Email Alert**
 
 ## What It Does
 
 - Checks job sources every 15 minutes.
 - Searches Adzuna for Software Engineering and Product Management internship roles.
+- Monitors selected company job boards through Greenhouse and Ashby.
 - Filters out senior-level roles and other postings I don't want.
 - Tracks external job IDs in a database so the same opening is not alerted twice.
 - Uses a first-run safeguard so starting the backend does not immediately email every existing job.
@@ -28,11 +31,15 @@ Greenhouse and Ashby are used to monitor job boards for companies I'm specifical
 **Frontend:** React, Vite  
 **Job Sources / APIs:** Adzuna, Greenhouse, Ashby  
 **Email:** Resend API  
-**Deployment:** Railway, Vercel
+**Deployment:** Railway, Vercel  
 
-## Job Alerts
+## CyrilHQ in Action
 
-CyrilHQ sends an email when it discovers a new matching opening. Each alert includes the role, company, and a direct link to apply.
+![CyrilHQ automated recruiting pipeline](screenshots/cyrilhq-recruiting-pipeline.png)
+
+CyrilHQ checks job sources every 15 minutes, filters relevant openings, tracks jobs it has already seen, and emails me when it discovers a new match.
+
+The image above shows the full flow from job discovery to the email alert I receive when CyrilHQ finds a new opening.
 
 ## Running Locally
 
