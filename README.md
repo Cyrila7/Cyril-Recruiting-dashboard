@@ -8,21 +8,7 @@ I built this project while learning Java and Spring Boot to practice working wit
 
 ## How It Works
 
-```text
-Adzuna / Greenhouse / Ashby
-            ↓
-     Spring Boot Scheduler
-            ↓
-     Filter Relevant Jobs
-            ↓
-   Check Previously Seen Jobs
-            ↓
-        Save New Jobs
-            ↓
-         Resend API
-            ↓
-        Email Alert
-```
+![CyrilHQ recruiting pipeline architecture](screenshots/recruiting-pipeline.svg)
 
 Greenhouse and Ashby are used to monitor job boards for companies I'm specifically targeting. Adzuna widens the search beyond that list and helps discover additional SWE and Product Management internship postings.
 
@@ -35,7 +21,6 @@ Greenhouse and Ashby are used to monitor job boards for companies I'm specifical
 - Uses a first-run safeguard so starting the backend does not immediately email every existing job.
 - Sends new-job alerts through the Resend API.
 - Caps alerts at 10 emails per polling cycle.
-- Includes a React dashboard for manually tracking applications and interview preparation.
 
 ## Tech Stack
 
@@ -45,19 +30,9 @@ Greenhouse and Ashby are used to monitor job boards for companies I'm specifical
 **Email:** Resend API  
 **Deployment:** Railway, Vercel
 
-## Screenshots
+## Job Alerts
 
-### Overview
-
-![Overview](screenshots/overview.png)
-
-### Career Tracker
-
-![Career Tracker](screenshots/career-tracker.png)
-
-### NeetCode 150 Tracker
-
-![NeetCode 150](screenshots/neetcode-tracker.png)
+CyrilHQ sends an email when it discovers a new matching opening. Each alert includes the role, company, and a direct link to apply.
 
 ## Running Locally
 
