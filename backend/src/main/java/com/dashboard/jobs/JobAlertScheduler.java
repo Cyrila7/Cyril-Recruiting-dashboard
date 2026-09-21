@@ -1,6 +1,5 @@
 package com.dashboard.jobs;
 
-import com.dashboard.jobs.CompanyAtsConfig.CompanyConfig;
 import com.dashboard.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,8 +10,6 @@ import java.util.List;
 @Component
 public class JobAlertScheduler {
 
-    @Autowired private GreenhousePoller greenhousePoller;
-    @Autowired private AshbyPoller ashbyPoller;
     @Autowired private AdzunaPoller adzunaPoller;
     @Autowired private SeenJobRepository seenJobRepository;
     @Autowired private EmailService emailService;
@@ -22,58 +19,19 @@ public class JobAlertScheduler {
 
     @Scheduled(fixedRate = 900000)
     public void pollForNewJobs() {
-        int emailsSentThisCycle = 0;
-        emailsSentThisCycle += pollTargetCompanies();
-        emailsSentThisCycle += pollAdzuna(emailsSentThisCycle);
+        int emailsSentThisCycle = pollAdzuna();
 
         System.out.println("Job poll complete. Emails sent this cycle: " + emailsSentThisCycle);
     }
 
-    private int pollTargetCompanies() {
-    int sent = 0;
-    for (CompanyConfig company : CompanyAtsConfig.COMPANIES) {
-        List<JobPosting> jobs = switch (company.atsType()) {
-            case GREENHOUSE -> greenhousePoller.fetchJobs(company.boardToken(), company.euHost());
-            case ASHBY -> ashbyPoller.fetchJobs(company.boardToken());
-        };
-
-        boolean isFirstRunForCompany = seenJobRepository.countByCompanyName(company.companyName()) == 0;
-
-        for (JobPosting job : jobs) {
-            if (sent >= MAX_EMAILS_PER_CYCLE) return sent;
-
-            // Extra per-company keyword filter (e.g. Anduril → only "intern" roles) so you dont keep getting all their companies roles thats why its here 
-            if (company.requiredKeyword() != null &&
-                !job.title().toLowerCase().contains(company.requiredKeyword().toLowerCase())) {
-                continue;
-            }
-
-            boolean alreadySeen = seenJobRepository.existsByCompanyNameAndExternalJobId(
-                company.companyName(), job.externalId()
-            );
-            if (alreadySeen) continue;
-
-            seenJobRepository.save(new SeenJob(
-                company.companyName(), job.externalId(), job.title(), job.url()
-            ));
-
-            if (!isFirstRunForCompany) {
-                sendAlertEmail(company.companyName(), job.title(), job.url());
-                sent++;
-            }
-        }
-        }
-    return sent;
-        }
-
-    private int pollAdzuna(int alreadySentThisCycle) {
+    private int pollAdzuna() {
         int sent = 0;
         List<AdzunaPosting> jobs = adzunaPoller.fetchJobs();
 
         boolean isFirstRunForAdzuna = seenJobRepository.countByCompanyName("Adzuna-Discovery") == 0;
 
         for (AdzunaPosting job : jobs) {
-            if (alreadySentThisCycle + sent >= MAX_EMAILS_PER_CYCLE) break;
+            if (sent >= MAX_EMAILS_PER_CYCLE) break;
 
             String sourceKey = "Adzuna-Discovery";
             boolean alreadySeen = seenJobRepository.existsByCompanyNameAndExternalJobId(sourceKey, job.id());
