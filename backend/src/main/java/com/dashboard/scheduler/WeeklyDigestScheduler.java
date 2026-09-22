@@ -20,12 +20,13 @@ public class WeeklyDigestScheduler {
     }
 
     // Daily NeetCode reminder at 9:00 AM Eastern Time
-    @Scheduled(cron = "0 0 9 * * *", zone = "America/New_York")
-    public void sendDailyNeetCode() {
-        String html = EmailService.baseTemplate(dailyContent(), "Daily DSA");
-        emailService.sendHtmlEmail("cyrrilann@gmail.com", "Daily DSA Reminder", html);
-        System.out.println("Daily NeetCode reminder sent.");
-    }
+    // Disabled for now — uncomment to resume DSA reminder emails.
+    // @Scheduled(cron = "0 0 9 * * *", zone = "America/New_York")
+    // public void sendDailyNeetCode() {
+    //     String html = EmailService.baseTemplate(dailyContent(), "Daily DSA");
+    //     emailService.sendHtmlEmail("cyrrilann@gmail.com", "Daily DSA Reminder", html);
+    //     System.out.println("Daily NeetCode reminder sent.");
+    // }
 
     // ===================== DAILY EMAIL =====================
 
