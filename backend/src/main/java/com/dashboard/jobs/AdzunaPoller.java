@@ -103,11 +103,32 @@ public class AdzunaPoller {
                 + "&content-type=application/json";
 
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = null;
 
-            if (response.statusCode() != 200) {
-                System.err.println("Adzuna fetch failed for '" + rawQuery + "': " + response.statusCode());
-                return results;
+            // Retry temporary upstream/rate-limit failures instead of giving up immediately.
+            // Backoff: 2 seconds after attempt 1, then 4 seconds after attempt 2.
+            for (int attempt = 1; attempt <= 3; attempt++) {
+                response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == 200) {
+                    break;
+                }
+
+                System.err.println(
+                    "Adzuna attempt " + attempt + " failed for '" + rawQuery + "': "
+                        + response.statusCode() + " | body: " + response.body()
+                );
+
+                boolean retryable = response.statusCode() == 429
+                    || response.statusCode() == 502
+                    || response.statusCode() == 503
+                    || response.statusCode() == 504;
+
+                if (!retryable || attempt == 3) {
+                    return results;
+                }
+
+                Thread.sleep(attempt * 2000L);
             }
 
             JsonNode root = mapper.readTree(response.body());
