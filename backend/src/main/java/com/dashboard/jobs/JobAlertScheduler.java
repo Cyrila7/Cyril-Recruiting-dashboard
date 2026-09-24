@@ -102,11 +102,12 @@ public class JobAlertScheduler {
     }
 
     private void sendAlertEmail(String companyName, String title, String url) {
-        boolean highPriority = isHighPriority(companyName, title);
+        String priorityLabel = getPriorityLabel(companyName, title);
+        boolean highPriority = priorityLabel != null;
 
-        String heading = highPriority ? "🔥 HIGH PRIORITY" : "🚨 New Opening";
+        String heading = highPriority ? priorityLabel : "🚨 New Opening";
         String subject = highPriority
-            ? "🔥 HIGH PRIORITY — " + companyName
+            ? priorityLabel + " — " + companyName
             : "New opening at " + companyName;
 
         String content = "<div style='margin-bottom:16px;'>" +
@@ -121,16 +122,30 @@ public class JobAlertScheduler {
         System.out.println((highPriority ? "HIGH PRIORITY alert sent: " : "Alert sent: ") + companyName + " — " + title);
     }
 
-    // Simple rule: highlight a job only when it is a 2027 internship
-    // AND it comes from one of the target companies above.
-    // This never hides jobs; it only changes how strong matches are labeled.
-    private boolean isHighPriority(String companyName, String title) {
+    // Returns a special label for strong 2027 internship matches.
+    // null means it is still a normal alert. No jobs are filtered out.
+    private String getPriorityLabel(String companyName, String title) {
         String company = companyName.toLowerCase();
         String jobTitle = title.toLowerCase();
 
         boolean targetCompany = TARGET_COMPANIES.stream().anyMatch(company::contains);
         boolean is2027Internship = jobTitle.contains("2027") && jobTitle.contains("intern");
 
-        return targetCompany && is2027Internship;
+        if (!targetCompany || !is2027Internship) {
+            return null;
+        }
+
+        boolean isSwe = jobTitle.contains("software")
+            || jobTitle.contains("engineer")
+            || jobTitle.contains("developer");
+
+        boolean isPm = jobTitle.contains("product manager")
+            || jobTitle.contains("product management")
+            || jobTitle.contains("product intern");
+
+        if (isPm) return "🔥 PM TARGET";
+        if (isSwe) return "🔥 SWE TARGET";
+
+        return "🔥 HIGH PRIORITY";
     }
 }
