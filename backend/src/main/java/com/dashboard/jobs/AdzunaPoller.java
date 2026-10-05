@@ -33,7 +33,10 @@ public class AdzunaPoller {
         "software engineer intern",
         "software engineer intern 2027",
         "product manager intern",
-        "product management intern 2027"
+        "product management intern 2027",
+        "product management intern spring 2027",
+        "product management intern winter 2027",
+        "product strategy intern spring 2027"
     );
 
     // Company name fragments to exclude (matched as substrings, lowercase).
@@ -159,8 +162,8 @@ public class AdzunaPoller {
         return results;
     }
 
-    // isRelevant now branches by query type: SWE queries filter for engineer/developer
-    // titles, PM queries filter for product manager/product management titles.
+    // isRelevant branches by query type: SWE queries filter for engineer/developer
+    // titles, while product queries accept PM/APM plus product strategy titles.
     // Both exclude senior-level titles either way.
     private boolean isRelevant(String title, String sourceQuery) {
         String t = title.toLowerCase();
@@ -169,11 +172,13 @@ public class AdzunaPoller {
                              && !t.contains("product manager"); // don't exclude "product manager" itself
 
         boolean isPmQuery = sourceQuery.toLowerCase().contains("product manager")
-                          || sourceQuery.toLowerCase().contains("product management");
+                          || sourceQuery.toLowerCase().contains("product management")
+                          || sourceQuery.toLowerCase().contains("product strategy");
 
         if (isPmQuery) {
             boolean isPm = t.contains("product manager") || t.contains("product management")
-                         || t.contains("associate product manager") || t.contains("apm");
+                         || t.contains("associate product manager") || t.contains("apm")
+                         || t.contains("product strategy");
             return isPm && !isSenior;
         } else {
             boolean isSwe = t.contains("software engineer") || t.contains("swe") || t.contains("developer");
