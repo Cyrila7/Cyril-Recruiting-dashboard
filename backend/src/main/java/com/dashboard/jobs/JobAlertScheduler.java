@@ -78,27 +78,56 @@ public class JobAlertScheduler {
         System.out.println("Job poll complete. Emails sent this cycle: " + emailsSentThisCycle);
     }
 
+    private static final int MAX_EMAILS_PER_DAY = 15;
+
     private int pollAdzuna() {
         int sent = 0;
         List<AdzunaPosting> jobs = adzunaPoller.fetchJobs();
-
-        boolean isFirstRunForAdzuna = seenJobRepository.countByCompanyName("Adzuna-Discovery") == 0;
+        String sourceKey = "Adzuna-Discovery";
+        boolean firstRun = seenJobRepository.countByCompanyName(sourceKey) == 0;
+        java.time.Instant dayStart = java.time.LocalDate.now(java.time.ZoneOffset.UTC)
+            .atStartOfDay(java.time.ZoneOffset.UTC).toInstant();
+        java.time.Instant dayEnd = dayStart.plus(1, java.time.temporal.ChronoUnit.DAYS);
+        long sentToday = seenJobRepository.countByAlertedAtGreaterThanEqualAndAlertedAtLessThan(dayStart, dayEnd);
 
         for (AdzunaPosting job : jobs) {
-            if (sent >= MAX_EMAILS_PER_CYCLE) break;
+            String fingerprint = fingerprint(job);
+            boolean sameId = seenJobRepository.existsByCompanyNameAndExternalJobId(sourceKey, job.id());
+            boolean sameOpening = seenJobRepository.existsByFingerprint(fingerprint);
+            if (sameId || sameOpening) continue;
 
-            String sourceKey = "Adzuna-Discovery";
-            boolean alreadySeen = seenJobRepository.existsByCompanyNameAndExternalJobId(sourceKey, job.id());
-            if (alreadySeen) continue;
-
-            seenJobRepository.save(new SeenJob(sourceKey, job.id(), job.title(), job.url()));
-
-            if (!isFirstRunForAdzuna) {
-                sendAlertEmail(job.company(), job.title(), job.url());
-                sent++;
+            // On the first run, establish a baseline without emailing older results.
+            if (firstRun) {
+                seenJobRepository.save(new SeenJob(sourceKey, job.id(), job.title(), job.url(),
+                    fingerprint, job.location(), null));
+                continue;
             }
+
+            // Don't mark unalerted jobs as seen: they remain eligible next scan/day.
+            if (sent >= MAX_EMAILS_PER_CYCLE || sentToday >= MAX_EMAILS_PER_DAY) break;
+            try {
+                sendAlertEmail(job.company(), job.title(), job.url());
+            } catch (RuntimeException e) {
+                System.err.println("Stopping alerts after email failure: " + e.getMessage());
+                break;
+            }
+            seenJobRepository.save(new SeenJob(sourceKey, job.id(), job.title(), job.url(),
+                fingerprint, job.location(), java.time.Instant.now()));
+            sent++;
+            sentToday++;
         }
         return sent;
+    }
+
+    // Distinct locations remain distinct opportunities. Normalization removes harmless
+    // differences in punctuation/capitalization, but does not erase location.
+    private String fingerprint(AdzunaPosting job) {
+        return normalize(job.company()) + "|" + normalize(job.title()) + "|" + normalize(job.location());
+    }
+
+    private String normalize(String value) {
+        return value == null ? "" : value.toLowerCase(java.util.Locale.ROOT)
+            .replaceAll("[^a-z0-9]+", " ").trim().replaceAll("\\s+", " ");
     }
 
     private void sendAlertEmail(String companyName, String title, String url) {
