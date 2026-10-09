@@ -15,6 +15,9 @@ public class SeenJob {
     private String externalJobId;
     private String title;
     private String url;
+    private String fingerprint;
+    private String location;
+    private Instant alertedAt;
     private Instant firstSeenAt;
 
     public SeenJob() {} // constructor for jpa builds your database basically to work with the database.
@@ -26,6 +29,17 @@ public class SeenJob {
         this.url = url;
         this.firstSeenAt = Instant.now();
     }
+
+    public SeenJob(String companyName, String externalJobId, String title, String url, String fingerprint, String location, Instant alertedAt) {
+        this(companyName, externalJobId, title, url);
+        this.fingerprint = fingerprint;
+        this.location = location;
+        this.alertedAt = alertedAt;
+    }
+
+    public String getFingerprint() { return fingerprint; }
+    public String getLocation() { return location; }
+    public Instant getAlertedAt() { return alertedAt; }
 
     public Long getId() { return id; }
     public String getCompanyName() { return companyName; }
