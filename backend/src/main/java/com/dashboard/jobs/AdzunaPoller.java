@@ -151,7 +151,8 @@ public class AdzunaPoller {
                     title,
                     company,
                     job.path("redirect_url").asText(""),
-                    job.path("created").asText("")
+                    job.path("created").asText(""),
+                    job.path("location").path("display_name").asText("")
                 ));
             }
         } catch (Exception e) {
