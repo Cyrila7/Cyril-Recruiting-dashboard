@@ -2,6 +2,7 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Overview from "./components/Overview";
 import CareerTracker from "./components/CareerTracker";
+import Applications from "./components/Applications";
 import NeetCode from "./components/NeetCode";
 import Notes from "./components/Notes";
 import Links from "./components/Links";
@@ -15,6 +16,7 @@ export default function App() {
   const pages = {
     overview: <Overview setActive={setActive} />,
     career: <CareerTracker />,
+    applications: <Applications />,
     neetcode: <NeetCode />,
     notes: <Notes />,
     links: <Links />,
