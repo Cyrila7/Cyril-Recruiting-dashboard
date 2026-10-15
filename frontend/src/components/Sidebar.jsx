@@ -1,6 +1,7 @@
 const NAV = [
   { id: "overview", icon: "⚡", label: "Overview" },
   { id: "career", icon: "🎯", label: "Career Tracker" },
+  { id: "applications", icon: "📋", label: "Applications" },
   { id: "neetcode", icon: "💻", label: "NeetCode 150" },
   { id: "notes", icon: "📝", label: "Notes" },
   { id: "links", icon: "🔗", label: "Links" },
