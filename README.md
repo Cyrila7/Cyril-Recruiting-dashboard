@@ -6,9 +6,9 @@ Instead of repeatedly checking job boards, the backend checks multiple job sourc
 
 ## CyrilHQ in Action
 
-![CyrilHQ automated recruiting pipeline](screenshots/cyrilhq-recruiting-pipeline.png)
+![Animated CyrilHQ pipeline: job APIs, filtering and deduplication, email alerts, and a 15-minute polling cycle](screenshots/cyrilhq-pipeline-animated.svg)
 
-CyrilHQ checks job sources every 15 minutes, filters relevant openings, tracks jobs it has already seen, and emails me when it discovers a new match.
+CyrilHQ checks job sources every 15 minutes, filters relevant openings, tracks jobs it has already seen, and emails me when it discovers a new match. *Animation illustrates the workflow; the progress bar is not a live timer.*
 
 ## How It Works
 
