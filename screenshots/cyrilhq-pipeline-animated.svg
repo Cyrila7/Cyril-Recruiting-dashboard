@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="340" viewBox="0 0 960 340" role="img" aria-labelledby="title desc">
+<title id="title">CyrilHQ automated recruiting pipeline</title>
+<desc id="desc">Looping illustration: job sources feed the CyrilHQ filtering engine, which checks previously seen jobs and sends new matches to email. A progress indicator represents the 15-minute polling interval, not a live countdown.</desc>
+<style>
+  text{font-family:Arial,Helvetica,sans-serif}
+  .heading{fill:#f8fafc;font-size:25px;font-weight:700}
+  .muted{fill:#94a3b8;font-size:13px}
+  .label{fill:#e2e8f0;font-size:16px;font-weight:700}
+  .small{fill:#94a3b8;font-size:12px}
+  .box{fill:#111e33;stroke:#30435d;stroke-width:1.5}
+  .pipe{stroke:#405879;stroke-width:3;stroke-linecap:round;stroke-dasharray:5 8}
+  .packet{fill:#60a5fa;filter:url(#glow)}
+  .green{fill:#4ade80}
+  .job{animation:travel 6s linear infinite}
+  .job2{animation:travel 6s linear infinite;animation-delay:-3s}
+  .email{animation:mail 6s ease-in-out infinite}
+  .pulse{animation:pulse 2s ease-in-out infinite}
+  .progress{animation:progress 12s linear infinite;transform-box:fill-box;transform-origin:left}
+  .badge{animation:stamp 6s ease-in-out infinite}
+  @keyframes travel{0%{transform:translateX(0);opacity:0}7%{opacity:1}47%{opacity:1}55%{transform:translateX(300px);opacity:0}100%{transform:translateX(300px);opacity:0}}
+  @keyframes mail{0%,54%{transform:translateX(0);opacity:0}61%{opacity:1}86%{transform:translateX(285px);opacity:1}94%,100%{transform:translateX(285px);opacity:0}}
+  @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+  @keyframes progress{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+  @keyframes stamp{0%,42%,100%{opacity:0;transform:scale(.9)}48%,75%{opacity:1;transform:scale(1)}}
+  @media(prefers-reduced-motion:reduce){.job,.job2,.email,.pulse,.progress,.badge{animation:none}.job,.job2,.email{opacity:0}.badge{opacity:1}.progress{transform:scaleX(1)}}
+</style>
+<defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="bar" x1="0" x2="1"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#22c55e"/></linearGradient></defs>
+<rect width="960" height="340" rx="20" fill="#0b1220"/>
+<rect x="1" y="1" width="958" height="338" rx="19" fill="none" stroke="#26364f"/>
+<circle cx="39" cy="34" r="5" fill="#4ade80" class="pulse"/>
+<text x="56" y="41" class="heading">CyrilHQ</text>
+<text x="177" y="40" class="muted">/ automated recruiting pipeline</text>
+<rect x="29" y="77" width="225" height="150" rx="14" class="box"/>
+<text x="49" y="105" class="label">01  Job sources</text>
+<rect x="47" y="120" width="187" height="27" rx="7" fill="#1d304a"/><text x="61" y="138" fill="#cbd5e1" font-size="13">Adzuna</text><circle cx="214" cy="134" r="4" fill="#60a5fa"/>
+<rect x="47" y="154" width="187" height="27" rx="7" fill="#1d304a"/><text x="61" y="172" fill="#cbd5e1" font-size="13">Greenhouse</text><circle cx="214" cy="168" r="4" fill="#60a5fa"/>
+<rect x="47" y="188" width="187" height="27" rx="7" fill="#1d304a"/><text x="61" y="206" fill="#cbd5e1" font-size="13">Ashby</text><circle cx="214" cy="202" r="4" fill="#60a5fa"/>
+<path d="M255 153 H351" class="pipe"/>
+<g class="job"><rect x="265" y="139" width="40" height="27" rx="6" fill="#2563eb" stroke="#93c5fd"/><path d="M276 148h17m-17 6h12" stroke="#dbeafe" stroke-width="2" stroke-linecap="round"/></g>
+<g class="job2"><rect x="265" y="139" width="40" height="27" rx="6" fill="#2563eb" stroke="#93c5fd"/><path d="M276 148h17m-17 6h12" stroke="#dbeafe" stroke-width="2" stroke-linecap="round"/></g>
+<rect x="352" y="77" width="257" height="150" rx="14" class="box"/>
+<text x="371" y="105" class="label">02  Filter + deduplicate</text>
+<text x="372" y="135" class="small">Relevant internships only</text>
+<text x="372" y="156" class="small">Check previously seen job IDs</text>
+<rect x="371" y="174" width="114" height="28" rx="8" fill="#123e30" stroke="#247b54"/><text x="386" y="192" fill="#86efac" font-size="12" font-weight="700">✓ NEW MATCH</text>
+<g class="badge"><rect x="491" y="174" width="101" height="28" rx="8" fill="#3a2633" stroke="#8c4153"/><text x="505" y="192" fill="#fda4af" font-size="12">× DUPLICATE</text></g>
+<path d="M610 153 H705" class="pipe"/>
+<g class="email"><rect x="622" y="139" width="43" height="29" rx="5" fill="#166534" stroke="#86efac"/><path d="M626 145l17 12 17-12" fill="none" stroke="#dcfce7" stroke-width="2"/></g>
+<rect x="706" y="77" width="225" height="150" rx="14" class="box"/>
+<text x="725" y="105" class="label">03  Email alert</text>
+<rect x="727" y="127" width="180" height="71" rx="9" fill="#1d304a" stroke="#365375"/>
+<path d="M741 144l20 14 20-14" fill="none" stroke="#86efac" stroke-width="2"/>
+<rect x="741" y="140" width="40" height="27" rx="4" fill="none" stroke="#86efac" stroke-width="2"/>
+<text x="793" y="150" fill="#e2e8f0" font-size="12" font-weight="700">New opening!</text>
+<text x="793" y="169" class="small">Resend API</text>
+<text x="725" y="214" class="small">Up to 10 alerts per cycle</text>
+<rect x="29" y="251" width="902" height="63" rx="12" fill="#111e33" stroke="#30435d"/>
+<text x="49" y="276" fill="#cbd5e1" font-size="13" font-weight="700">Scheduled polling cycle</text>
+<text x="906" y="276" fill="#94a3b8" font-size="12" text-anchor="end">Every 15 minutes · illustrative loop</text>
+<rect x="49" y="288" width="862" height="7" rx="4" fill="#263b58"/>
+<rect x="49" y="288" width="862" height="7" rx="4" fill="url(#bar)" class="progress"/>
+</svg>
