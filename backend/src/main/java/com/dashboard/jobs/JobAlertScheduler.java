@@ -71,7 +71,7 @@ public class JobAlertScheduler {
         "visa",
         "walmart"
     );
-    @Scheduled(fixedRate = 900000)
+    @Scheduled(fixedRate = 600000)
     public void pollForNewJobs() {
         int emailsSentThisCycle = pollAdzuna();
 
@@ -151,14 +151,15 @@ public class JobAlertScheduler {
         System.out.println((highPriority ? "HIGH PRIORITY alert sent: " : "Alert sent: ") + companyName + " — " + title);
     }
 
-    // Returns a special label for strong 2027 internship matches.
+    // Returns a special label for strong 2027 internship or co-op matches.
     // null means it is still a normal alert. No jobs are filtered out.
     private String getPriorityLabel(String companyName, String title) {
         String company = companyName.toLowerCase();
         String jobTitle = title.toLowerCase();
 
         boolean targetCompany = TARGET_COMPANIES.stream().anyMatch(company::contains);
-        boolean is2027Internship = jobTitle.contains("2027") && jobTitle.contains("intern");
+        boolean is2027Internship = jobTitle.contains("2027") && (jobTitle.contains("intern")
+            || jobTitle.contains("co-op") || jobTitle.contains("coop") || jobTitle.contains("co op"));
 
         if (!targetCompany || !is2027Internship) {
             return null;
