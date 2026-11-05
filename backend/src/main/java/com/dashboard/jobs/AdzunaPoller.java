@@ -29,6 +29,10 @@ public class AdzunaPoller {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
+    // Circuit breaker: pause Adzuna requests after upstream 503/429 responses.
+    private static final long COOLDOWN_MILLIS = 30 * 60 * 1000L;
+    private volatile long adzunaRetryAfterMillis = 0L;
+
     private static final List<String> QUERIES = List.of(
         "software engineer intern",
         "software engineer intern 2027",
@@ -85,9 +89,14 @@ public class AdzunaPoller {
     );
 
     public List<AdzunaPosting> fetchJobs() {
+        if (System.currentTimeMillis() < adzunaRetryAfterMillis) {
+            System.out.println("Adzuna polling skipped: upstream cooldown active.");
+            return List.of();
+        }
         // Dedup across all queries by job id, since they'll overlap a lot
         Map<String, AdzunaPosting> results = new LinkedHashMap<>();
         for (String query : QUERIES) {
+            if (System.currentTimeMillis() < adzunaRetryAfterMillis) break;
             for (AdzunaPosting posting : fetchForQuery(query)) {
                 results.putIfAbsent(posting.id(), posting);
             }
@@ -112,28 +121,24 @@ public class AdzunaPoller {
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
             HttpResponse<String> response = null;
 
-            // Retry temporary upstream/rate-limit failures instead of giving up immediately.
-            // Backoff: 2 seconds after attempt 1, then 4 seconds after attempt 2.
+            // Avoid hammering an unavailable or rate-limited upstream service.
+            // 503 and 429 activate a shared 30-minute cooldown for all queries.
             for (int attempt = 1; attempt <= 3; attempt++) {
                 response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                int status = response.statusCode();
 
-                if (response.statusCode() == 200) {
-                    break;
-                }
+                if (status == 200) break;
 
-                System.err.println(
-                    "Adzuna attempt " + attempt + " failed for '" + rawQuery + "': "
-                        + response.statusCode() + " | body: " + response.body()
-                );
+                System.err.println("Adzuna HTTP " + status + " for '" + rawQuery
+                    + "' (attempt " + attempt + "/3).");
 
-                boolean retryable = response.statusCode() == 429
-                    || response.statusCode() == 502
-                    || response.statusCode() == 503
-                    || response.statusCode() == 504;
-
-                if (!retryable || attempt == 3) {
+                if (status == 503 || status == 429) {
+                    adzunaRetryAfterMillis = System.currentTimeMillis() + COOLDOWN_MILLIS;
+                    System.err.println("Adzuna unavailable/rate-limited; pausing requests for 30 minutes.");
                     return results;
                 }
+
+                if ((status != 502 && status != 504) || attempt == 3) return results;
 
                 Thread.sleep(attempt * 2000L);
             }
