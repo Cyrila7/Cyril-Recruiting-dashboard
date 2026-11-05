@@ -32,9 +32,13 @@ public class AdzunaPoller {
     private static final List<String> QUERIES = List.of(
         "software engineer intern",
         "software engineer intern 2027",
+        "software engineer co-op spring 2027",
+        "software developer co-op spring 2027",
+        "software engineering co-op 2027",
         "product manager intern",
         "product management intern 2027",
         "product management intern spring 2027",
+        "product management co-op spring 2027",
         "product management intern winter 2027",
         "product strategy intern spring 2027"
     );
@@ -180,11 +184,17 @@ public class AdzunaPoller {
             boolean isPm = t.contains("product manager") || t.contains("product management")
                          || t.contains("associate product manager") || t.contains("apm")
                          || t.contains("product strategy");
-            return isPm && !isSenior;
+            return isPm && !isSenior && matchesCoopQuery(t, sourceQuery);
         } else {
             boolean isSwe = t.contains("software engineer") || t.contains("swe") || t.contains("developer");
-            return isSwe && !isSenior;
+            return isSwe && !isSenior && matchesCoopQuery(t, sourceQuery);
         }
+    }
+
+    // Co-op searches should not generate ordinary internship alerts. Other queries retain existing behavior.
+    private boolean matchesCoopQuery(String title, String sourceQuery) {
+        if (!sourceQuery.toLowerCase().contains("co-op")) return true;
+        return title.contains("co-op") || title.contains("coop") || title.contains("co op");
     }
 
     private boolean isBlockedCompany(String company) {
