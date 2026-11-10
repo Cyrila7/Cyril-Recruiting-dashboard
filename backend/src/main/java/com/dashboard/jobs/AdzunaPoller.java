@@ -30,7 +30,7 @@ public class AdzunaPoller {
     private final ObjectMapper mapper = new ObjectMapper();
 
     // Circuit breaker: pause Adzuna requests after upstream 503/429 responses.
-    private static final long COOLDOWN_MILLIS = 30 * 60 * 1000L;
+    private static final long COOLDOWN_MILLIS = 10 * 60 * 1000L;
     private volatile long adzunaRetryAfterMillis = 0L;
 
     private static final List<String> QUERIES = List.of(
@@ -134,7 +134,7 @@ public class AdzunaPoller {
 
                 if (status == 503 || status == 429) {
                     adzunaRetryAfterMillis = System.currentTimeMillis() + COOLDOWN_MILLIS;
-                    System.err.println("Adzuna unavailable/rate-limited; pausing requests for 30 minutes.");
+                    System.err.println("Adzuna unavailable/rate-limited; pausing requests for 10 minutes.");
                     return results;
                 }
 
