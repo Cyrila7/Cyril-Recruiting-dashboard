@@ -6,6 +6,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.time.Instant;
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 
 @Component
 public class JobAlertScheduler {
@@ -91,6 +94,18 @@ public class JobAlertScheduler {
         long sentToday = seenJobRepository.countByAlertedAtGreaterThanEqualAndAlertedAtLessThan(dayStart, dayEnd);
 
         for (AdzunaPosting job : jobs) {
+            Instant postedAt;
+            try {
+                postedAt = Instant.parse(job.created());
+            } catch (DateTimeParseException | NullPointerException e) {
+                System.out.println("Skipping job with invalid creation date: " + job.id());
+                continue;
+            }
+            Instant now = Instant.now();
+            if (postedAt.isBefore(now.minus(Duration.ofHours(48))) || postedAt.isAfter(now)) {
+                System.out.println("Skipping job outside freshness window: " + job.id() + " created=" + postedAt);
+                continue;
+            }
             String fingerprint = fingerprint(job);
             boolean sameId = seenJobRepository.existsByCompanyNameAndExternalJobId(sourceKey, job.id());
             boolean sameOpening = seenJobRepository.existsByFingerprint(fingerprint);
@@ -106,7 +121,7 @@ public class JobAlertScheduler {
             // Don't mark unalerted jobs as seen: they remain eligible next scan/day.
             if (sent >= MAX_EMAILS_PER_CYCLE || sentToday >= MAX_EMAILS_PER_DAY) break;
             try {
-                sendAlertEmail(job.company(), job.title(), job.url());
+                sendAlertEmail(job.company(), job.title(), job.url(), postedAt);
             } catch (RuntimeException e) {
                 System.err.println("Stopping alerts after email failure: " + e.getMessage());
                 break;
@@ -130,7 +145,8 @@ public class JobAlertScheduler {
             .replaceAll("[^a-z0-9]+", " ").trim().replaceAll("\\s+", " ");
     }
 
-    private void sendAlertEmail(String companyName, String title, String url) {
+    private void sendAlertEmail(String companyName, String title, String url, Instant postedAt) {
+        long ageHours = Duration.between(postedAt, Instant.now()).toHours();
         String priorityLabel = getPriorityLabel(companyName, title);
         boolean highPriority = priorityLabel != null;
 
@@ -143,7 +159,8 @@ public class JobAlertScheduler {
             "<h2 style='margin:0 0 12px;color:#e8e8f0;font-size:14px;font-weight:700;'>" + heading + "</h2>" +
             "<a href='" + url + "' style='display:block;background:#1a1a24;border:1px solid #2a2a3a;border-radius:8px;padding:14px 16px;text-decoration:none;'>" +
             "<span style='color:#e8e8f0;font-size:14px;font-weight:600;'>" + title + "</span><br>" +
-            "<span style='color:#6c63ff;font-size:12px;'>" + companyName + " → View & Apply</span>" +
+            "<span style='color:#6c63ff;font-size:12px;'>" + companyName + " → View & Apply</span><br>" +
+            "<span style='color:#a0a0b0;font-size:12px;'>Adzuna creation date: " + postedAt + " (" + ageHours + " hours ago)</span>" +
             "</a></div>";
 
         String html = EmailService.baseTemplate(content, highPriority ? "High Priority Job Alert" : "New Job Alert");
